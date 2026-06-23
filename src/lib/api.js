@@ -2,7 +2,7 @@
 // SOBEI Portal — API Integration
 // ============================================
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function unwrapPayload(payload) {
   if (!payload || typeof payload !== 'object') return payload;
@@ -164,20 +164,7 @@ function normalizeDenunciasList(raw) {
   return Array.isArray(list) ? list.map(normalizeDenuncia) : [];
 }
 
-function getAuthHeaders() {
-  const headers = {
-    'Content-Type': 'application/json'
-  };
 
-  if (typeof window !== 'undefined') {
-    const token = sessionStorage.getItem('sobei_token');
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-  }
-
-  return headers;
-}
 
 // ---- API Pública ----
 
