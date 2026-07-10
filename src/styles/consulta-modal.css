@@ -76,7 +76,7 @@
 }
 
 /* Hack to center the inline-block badge */
-.consulta-modal > .consulta-modal__status-badge {
+.consulta-modal>.consulta-modal__status-badge {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -161,12 +161,10 @@
 /* ---- Divisor ---- */
 .consulta-modal__divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-gray-300),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--color-gray-300),
+      transparent);
   margin: var(--spacing-lg) 0;
 }
 
@@ -276,8 +274,13 @@
 
 /* ---- Animations ---- */
 @keyframes consultaFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes consultaSlideIn {
@@ -285,6 +288,7 @@
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
