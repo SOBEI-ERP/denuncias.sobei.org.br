@@ -1,6 +1,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import QueryProvider from '@/components/QueryProvider';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <QueryProvider>{children}</QueryProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
