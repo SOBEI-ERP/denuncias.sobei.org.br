@@ -72,113 +72,118 @@ export default function LandingPage() {
 
   return (
     <main className="landing">
-      {/* ---- Hero Section ---- */}
-      <section className="hero">
-        <Image
-          src="/public/images/LOGO BRANCO.png"
-          alt="SOBEI - Sociedade Beneficente Equilíbrio de Interlagos"
-          width={280}
-          height={112}
-          className="hero__logo"
-          priority
-        />
-        <h1 className="hero__title">A SOBEI ESTÁ COM VOCÊ!</h1>
-        <h2 className="hero__subtitle">Canal de Comunicação e Denúncias</h2>
-        <p className="hero__description">
-          Esta plataforma é o ambiente oficial e seguro para relatar condutas inadequadas,
-          violações éticas ou irregularidades. Nosso objetivo é manter a integridade, a segurança
-          e a transparência em nossas unidades, garantindo que todos os relatos sejam tratados com
-          a máxima confidencialidade, seriedade e rigor analítico.
-        </p>
-        <p className="hero__description">
-          Você pode utilizar este espaço tanto para reportar situações das quais foi vítima
-          quanto eventos que tenha presenciado.
-        </p>
-        <div className="hero__cta">
-          <Link href="/denuncia" className="btn btn--outline-white">
-            <strong>Denunciar</strong>
-          </Link>
-        </div>
-      </section>
-
-      {/* ---- How It Works ---- */}
-      <section className="how-it-works">
-        <h2 className="how-it-works__title">Como funciona?</h2>
-
-        <div className="how-it-works__step">
-          <h3 className="how-it-works__step-title">1. Faça seu relato</h3>
-          <p className="how-it-works__step-text">
-            Esta plataforma é o ambiente oficial e seguro para relatar condutas inadequadas,
-            violações éticas ou irregularidades. Nosso objetivo é manter a integridade, a segurança
-            e a transparência em nossas unidades, garantindo que todos os relatos sejam tratados com
-            a máxima confidencialidade, seriedade e rigor analítico.
-          </p>
-          <p className="how-it-works__step-text" style={{ marginTop: '8px' }}>
-            Você pode utilizar este espaço tanto para reportar situações das quais foi vítima
-            quanto eventos que tenha presenciado.
-          </p>
-        </div>
-
-        <div className="how-it-works__step">
-          <h3 className="how-it-works__step-title">2. Guarde o seu Protocolo</h3>
-          <p className="how-it-works__step-text">
-            Assim que a denúncia for enviada, o sistema exibirá um número de protocolo único na tela.
-            Anote e guarde este número em um local seguro. Por questões de sigilo, esta será a única
-            forma de acessar o seu relato futuramente.
-          </p>
-        </div>
-
-        <div className="how-it-works__step">
-          <h3 className="how-it-works__step-title">3. Acompanhe o Andamento</h3>
-          <p className="how-it-works__step-text">
-            Você não precisa se identificar para saber o que aconteceu com a sua denúncia. Utilize
-            a barra de pesquisa disponível no topo desta página inicial, insira o seu número de
-            protocolo e acompanhe o status da investigação. Por lá, você também poderá visualizar
-            as respostas ou possíveis pedidos de esclarecimento anexados pela equipe de apuração.
-          </p>
-        </div>
-      </section>
-
-      {/* ---- Protocol Search ---- */}
-      <section className="protocol-search">
-        <h2 className="protocol-search__title">Consulte o andamento da sua denúncia</h2>
-        <p className="protocol-search__label">
-          Digite o número de protocolo da sua denúncia:
-        </p>
-
-        <form onSubmit={handleConsultar}>
-          <div className="protocol-search__input-group">
-            <input
-              type="text"
-              className="protocol-search__input"
-              placeholder="Digite seu número de protocolo"
-              value={protocolo}
-              onChange={handleProtocoloChange}
-              maxLength={11}
-              id="protocol-input"
-            />
-          </div>
-
-          {erro && (
-            <p style={{ color: 'var(--color-accent)', textAlign: 'center', margin: '16px 0', fontSize: '14px' }}>
-              Protocolo não encontrado. Verifique o número e tente novamente.
+      <div className="portal-container">
+        {/* ---- Portal Grid Layout ---- */}
+        <div className="portal-grid" style={{ paddingTop: 'var(--spacing-lg)' }}>
+          {/* Coluna Esquerda: Informações e Guia */}
+          <section className="portal-info">
+            <div className="portal-info__logo-wrapper">
+              <Image
+                src="/public/images/LOGO BRANCO.png"
+                alt="SOBEI - Sociedade Beneficente Equilíbrio de Interlagos"
+                width={580}
+                height={232}
+                className="portal-info__logo"
+                priority
+              />
+            </div>
+            <h1 className="portal-info__title">A SOBEI está com você!</h1>
+            <p className="portal-info__description">
+              Este canal é o ambiente seguro e confidencial para relatar desvios de conduta, violações éticas ou irregularidades. Nosso compromisso é com a verdade, a transparência e a melhoria contínua de nossas 18 unidades. Os relatos podem ser registrados de forma anônima ou identificada, sendo tratados com absoluto sigilo.
             </p>
-          )}
 
-          <div className="protocol-search__btn" style={{ textAlign: 'center' }}>
-            <button
-              type="submit"
-              className="btn btn--outline-white"
-              disabled={buscando}
-            >
-              <strong>{buscando ? 'Consultando...' : 'Consultar'}</strong>
-            </button>
-          </div>
-        </form>
-      </section>
+            <div className="portal-guide">
+              <h2 className="portal-guide__title">Orientações de Uso</h2>
+              <div className="portal-steps">
+                {/* Passo 1 */}
+                <div className="portal-steps__item">
+                  <div className="portal-steps__badge">1</div>
+                  <div className="portal-steps__content">
+                    <h3 className="portal-steps__step-title">Faça seu relato detalhado</h3>
+                    <p className="portal-steps__step-text">
+                      Descreva o ocorrido de forma clara e objetiva (o que, quem, quando e onde). Se preferir, você não precisa se identificar em nenhuma etapa do processo.
+                    </p>
+                  </div>
+                </div>
 
-      {/* Footer spacer */}
-      <div style={{ height: '80px' }} />
+                {/* Passo 2 */}
+                <div className="portal-steps__item">
+                  <div className="portal-steps__badge">2</div>
+                  <div className="portal-steps__content">
+                    <h3 className="portal-steps__step-title">Guarde seu número de protocolo</h3>
+                    <p className="portal-steps__step-text">
+                      Ao concluir o relato, salve o código gerado pelo sistema (ex: AAA-000-000). Ele será a sua única chave de acesso para consultar o andamento.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Passo 3 */}
+                <div className="portal-steps__item">
+                  <div className="portal-steps__badge">3</div>
+                  <div className="portal-steps__content">
+                    <h3 className="portal-steps__step-title">Acompanhe a apuração</h3>
+                    <p className="portal-steps__step-text">
+                      Insira o seu número de protocolo no painel de acompanhamento para ler respostas, ver o status da investigação ou anexar esclarecimentos solicitados.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Coluna Direita: Painel de Ações */}
+          <aside className="portal-actions">
+            {/* Seção 1: Nova Denúncia */}
+            <div className="portal-actions__section">
+              <h2 className="portal-actions__title">Registrar Relato</h2>
+              <p className="portal-actions__subtitle">Comunique uma ocorrência de forma segura</p>
+              <div className="portal-actions__btn-group">
+                <Link href="/denuncia" className="btn">
+                  <strong>Iniciar Novo Relato</strong>
+                </Link>
+              </div>
+            </div>
+
+            {/* Seção 2: Consulta de Protocolo */}
+            <div className="portal-actions__section">
+              <h2 className="portal-actions__title">Acompanhar Protocolo</h2>
+              <p className="portal-actions__subtitle">Acompanhe o status e a evolução da sua apuração</p>
+
+              <form onSubmit={handleConsultar} className="portal-search-form">
+                <div className="portal-search-form__input-group">
+                  <input
+                    type="text"
+                    className="portal-search-form__input"
+                    placeholder="AAA-000-000"
+                    value={protocolo}
+                    onChange={handleProtocoloChange}
+                    maxLength={11}
+                    id="protocol-input"
+                  />
+                </div>
+
+                {erro && (
+                  <p style={{ color: 'var(--color-accent)', textAlign: 'center', margin: '0 0 16px 0', fontSize: '13px', fontWeight: '500' }}>
+                    Protocolo não encontrado. Verifique e tente novamente.
+                  </p>
+                )}
+
+                <div className="portal-search-form__btn">
+                  <button
+                    type="submit"
+                    className="btn"
+                    disabled={buscando}
+                  >
+                    <strong>{buscando ? 'Consultando...' : 'Consultar Protocolo'}</strong>
+                  </button>
+                </div>
+              </form>
+
+
+            </div>
+          </aside>
+        </div>
+      </div>
 
       {/* ---- Modal de Consulta ---- */}
       {showModal && resultado && (
