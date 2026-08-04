@@ -8,6 +8,7 @@ import { denunciaSchema } from '@/lib/schemas';
 import { enviarDenuncia } from '@/lib/api';
 import { UNIDADES } from '@/lib/mockData';
 import CustomSelect from '@/components/admin/CustomSelect';
+import AlertModal from '@/components/AlertModal';
 
 const formatPhone = (value) => {
   if (!value) return '';
@@ -27,6 +28,7 @@ export default function FormularioPage() {
   const [step, setStep] = useState('form'); // 'form' | 'confirmacao' | 'protocolo'
   const [protocolo, setProtocolo] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const {
     register,
@@ -63,10 +65,10 @@ export default function FormularioPage() {
         setProtocolo(result.protocolo);
         setStep('protocolo');
       } else {
-        alert(result?.message || 'Erro ao enviar denúncia. Tente novamente.');
+        setErrorMessage(result?.message || 'Erro ao enviar denúncia. Tente novamente.');
       }
     } catch {
-      alert('Erro ao enviar denúncia. Tente novamente.');
+      setErrorMessage('Erro ao enviar denúncia. Tente novamente.');
     } finally {
       setEnviando(false);
     }
@@ -342,6 +344,14 @@ export default function FormularioPage() {
             </p>
           </div>
         </div>
+        <AlertModal
+          isOpen={!!errorMessage}
+          title="Erro ao Enviar Denúncia"
+          message={errorMessage}
+          type="error"
+          buttonText="Entendido"
+          onClose={() => setErrorMessage(null)}
+        />
       </main>
     );
   }
