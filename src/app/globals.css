@@ -27,7 +27,7 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-normal);
   color: var(--color-gray-900);
-  background-color: var(--color-white);
+  background-color: var(--color-primary-deeper);
   min-height: 100vh;
 }
 
