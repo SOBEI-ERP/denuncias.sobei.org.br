@@ -27,7 +27,7 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-normal);
   color: var(--color-gray-900);
-  background-color: var(--color-white);
+  background-color: var(--color-primary-deeper);
   min-height: 100vh;
 }
 
@@ -94,6 +94,12 @@ h1, h2, h3, h4, h5, h6 {
 :focus-visible {
   outline: 2px solid var(--color-purple);
   outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
 }
 
 /* ---- Utility Classes ---- */
