@@ -2,14 +2,14 @@
 // SOBEI Portal — API Integration
 // ============================================
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
 
-function unwrapPayload(payload) {
+export function unwrapPayload(payload) {
   if (!payload || typeof payload !== 'object') return payload;
   return payload.denuncia || payload.data || payload;
 }
 
-function normalizeMedidas(value, asText = false) {
+export function normalizeMedidas(value, asText = false) {
   if (!value) return asText ? null : [];
 
   const medidas = Array.isArray(value) ? value : [value];
@@ -28,11 +28,11 @@ function normalizeMedidas(value, asText = false) {
         autor: medida.autor || null,
       };
     })
-    .filter(Boolean);
+    .filter((m) => m !== null && m !== undefined);
 
   if (asText) {
     const text = normalized
-      .map((medida) => medida.descricao)
+      .map((medida) => (medida ? medida.descricao : ''))
       .filter(Boolean)
       .join('\n');
     return text || null;
@@ -41,7 +41,7 @@ function normalizeMedidas(value, asText = false) {
   return normalized;
 }
 
-function normalizeDenuncia(raw) {
+export function normalizeDenuncia(raw) {
   const denuncia = unwrapPayload(raw);
   if (!denuncia || typeof denuncia !== 'object') return denuncia;
 
@@ -70,7 +70,7 @@ function normalizeDenuncia(raw) {
   };
 }
 
-function normalizeDenunciasList(raw) {
+export function normalizeDenunciasList(raw) {
   const list = Array.isArray(raw)
     ? raw
     : raw?.content || raw?.items || raw?.denuncias || raw?.data || [];
@@ -78,7 +78,33 @@ function normalizeDenunciasList(raw) {
   return Array.isArray(list) ? list.map(normalizeDenuncia) : [];
 }
 
+export function buildTimeline(estado) {
+  const statusKey = typeof estado === 'string' ? estado.toUpperCase() : '';
+  const statusMap = {
+    NA_FILA: [
+      { label: 'Denúncia recebida!', active: true },
+      { label: 'Sua denúncia está sendo analisada', active: false },
+      { label: 'Protocolo fechado!', active: false },
+    ],
+    EM_ANDAMENTO: [
+      { label: 'Denúncia recebida!', active: true },
+      { label: 'Sua denúncia está sendo analisada', active: true },
+      { label: 'Protocolo fechado!', active: false },
+    ],
+    FECHADA: [
+      { label: 'Denúncia recebida!', active: true },
+      { label: 'Sua denúncia está sendo analisada', active: true },
+      { label: 'Protocolo fechado!', active: true },
+    ],
+    ARQUIVADA: [
+      { label: 'Denúncia recebida!', active: true },
+      { label: 'Sua denúncia está sendo analisada', active: true },
+      { label: 'Denúncia arquivada', active: true },
+    ],
+  };
 
+  return (statusKey in statusMap) ? statusMap[statusKey] : [];
+}
 
 // ---- API Pública ----
 
@@ -118,13 +144,14 @@ export async function enviarDenuncia(rawData) {
     });
 
     if (!response.ok) {
-      const err = await response.json();
+      const err = await response.json().catch(() => ({}));
       return { success: false, message: err.message || 'Erro ao enviar denúncia' };
     }
 
     const result = await response.json();
     return { protocolo: result.protocolo, success: true };
   } catch (error) {
+    console.error('Erro ao enviar denúncia:', error);
     return { success: false, message: 'Erro de conexão com o servidor' };
   }
 }
@@ -132,22 +159,22 @@ export async function enviarDenuncia(rawData) {
 export async function consultarProtocolo(protocolo) {
   try {
     const response = await fetch(`${API_BASE_URL}/public/denuncias/protocolo/${protocolo}`, {
-      cache: 'no-store'
+      cache: 'no-store',
     });
     if (!response.ok) {
       return { found: false, protocolo, status: null, timeline: [] };
     }
-    
-    const result = unwrapPayload(await response.json());
-    const estado = result.estado ?? result.status;
-    // A API já envia estado e ultimaAlteracao, simularemos a timeline visual com base no estado retornado
-    const timeline = buildTimeline(estado ? estado.toUpperCase() : '');
-    
+
+    const raw = await response.json().catch(() => ({}));
+    const result = normalizeDenuncia(raw);
+    const estado = result.status;
+    const timeline = buildTimeline(estado);
+
     return {
       found: true,
       protocolo: result.protocolo,
       status: estado ? estado.toLowerCase() : null,
-      timeline: timeline,
+      timeline,
       dataEnvio: result.dataEnvio ?? result.dataAbertura ?? result.criadoEm,
       unidade: result.unidade,
       tipo: result.tipo,
@@ -158,32 +185,7 @@ export async function consultarProtocolo(protocolo) {
       tipoConclusao: result.tipoConclusao ?? result.conclusao?.tipoConclusao,
     };
   } catch (error) {
+    console.error('Erro ao consultar protocolo:', error);
     return { found: false, protocolo, status: null, timeline: [] };
   }
-}
-
-function buildTimeline(estado) {
-  const statusMap = {
-    NA_FILA: [
-      { label: 'Denúncia recebida!', active: true },
-      { label: 'Sua denúncia está sendo analisada', active: false },
-      { label: 'Protocolo fechado!', active: false },
-    ],
-    EM_ANDAMENTO: [
-      { label: 'Denúncia recebida!', active: true },
-      { label: 'Sua denúncia está sendo analisada', active: true },
-      { label: 'Protocolo fechado!', active: false },
-    ],
-    FECHADA: [
-      { label: 'Denúncia recebida!', active: true },
-      { label: 'Sua denúncia está sendo analisada', active: true },
-      { label: 'Protocolo fechado!', active: true },
-    ],
-    ARQUIVADA: [
-      { label: 'Denúncia recebida!', active: true },
-      { label: 'Sua denúncia está sendo analisada', active: true },
-      { label: 'Denúncia arquivada', active: true },
-    ],
-  };
-  return statusMap[estado] || [];
 }
