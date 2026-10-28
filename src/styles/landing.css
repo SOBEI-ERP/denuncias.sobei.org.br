@@ -50,6 +50,7 @@
   width: 100%;
   max-width: 440px;
   height: auto;
+  aspect-ratio: 1001 / 468;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 

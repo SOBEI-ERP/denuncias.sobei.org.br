@@ -5,7 +5,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
   variable: '--font-inter',
 });
@@ -21,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <QueryProvider>{children}</QueryProvider>
-        <SpeedInsights />
+        {process.env.VERCEL ? <SpeedInsights /> : null}
       </body>
     </html>
   );
